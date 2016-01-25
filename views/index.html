@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html ng-app="Rekkit">
+<head>
+	<title>Rekkit</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://bootswatch.com/simplex/bootstrap.min.css"></link>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../public/stylesheets/main.css">
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.js"></script>
+	<script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
+	<script src="https://cdn.jsdelivr.net/angular.moment/1.0.0-beta.3/angular-moment.min.js"></script>
+	<script src="../controllers/redditController.js"></script>
+</head>
+<body ng-controller="RekkitCtrl">
+	<div class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand">
+					<i class="fa fa-reddit-alien"></i> Rekkit
+				</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#" ng-click="showF()"><i class="fa fa-plus"></i> Submit Post</a></li>
+			</ul>
+			<form class="navbar-form navbar-left" role="search">
+		        <div class="form-group">
+		            <input type="text" class="form-control" placeholder="Search" ng-model="search.string">
+		        </div>
+	      	</form>
+		</div>
+	</div>
+
+	<div class="container-fluid col-md-offset-1 col-md-10 slide" ng-hide="showForm">
+		<form name="myForm">
+			<div class="form-group">
+				<label for="title">Title:</label>
+				<input type="text" name="title" placeholder="be creative" class="form-control" ng-model="item.title" validate required>
+			</div>
+			<div class="form-group">
+				<label for="description">Description:</label>
+				<textarea name="description" class="form-control" ng-model="item.description" validate required></textarea>
+			</div>
+			<div class="form-group">
+				<label for="author">Author:</label>
+				<input type="text" name="author" class="form-control" ng-model="item.author" validate require>
+			</div>
+			<div class="form-group">
+				<label for="image">Image Url:</label>
+				<input type="text" name="image" class="form-control" ng-model="item.image" validate require>
+			</div>
+			<div class="form-group">
+				<button ng-click="addPost(item, myForm)" type="submit" class="btn btn-primary">Submit</button>
+			</div>
+		</form>
+	</div>
+	<div class="contaniner-fluid col-md-offset-1 col-md-10">
+		<div class="jumbotron slide" ng-repeat="item in items | filter:search.string">
+			<div class="row">
+				<img ng-src='{{item.image}}' alt="placebear"  class="col-md-4 display-image" />
+				<h3 class="col-md-8"><b>{{item.title}}</b> <a href="#" ng-click="upVote(item)"><i class="fa fa-thumbs-o-up"></i></a> <a href="#" ng-click="downVote(item)"><i class="fa fa-thumbs-o-down"></i></a><p ng-class="{positive: item.votes > 0, negative: item.votes < 0, nothing: item.votes === 0}">{{item.votes}}</p></h3>
+				<p class="col-md-8 text-left">{{item.description}}</p>
+				<p class="col-md-8 small"><time>{{item.createdAt | amCalendar}}</time> | postedBy: <b>{{item.author}} | <a ng-click="showComments(item)">comments: {{item.comments.length}}</a></b></p>
+			</div>
+			<div ng-hide="item.commentBool" class="row" ng-repeat="comment in item.comments">
+				<p class="col-md-offset-2">{{comment.comment}} By:<b>{{comment.author}}</b></p>
+			</div>
+		</div>
+	</div>
+	<div class="navbar navbar-fixed-bottom navbar-default">
+		<div class="container-fluid">
+			<p class="navbar-text">Cairo</p>
+		</div>
+	</div>
+</body>
+</html>

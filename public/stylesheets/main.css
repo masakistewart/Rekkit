@@ -1,0 +1,25 @@
+body {
+	font-size: 16px;
+}
+
+img.display-image {
+	height: 9.375em;
+	width: 9.375em;
+	margin-left: 1em;
+}
+
+p.small {
+	font-size: .9em
+}
+
+.positive {
+	color: green;
+}
+
+.negative {
+	color: red;
+}
+
+.nothing {
+	color: blue;
+}
