@@ -29,6 +29,12 @@
 		        <div class="form-group">
 		            <input type="text" class="form-control" placeholder="Search" ng-model="search.string">
 		        </div>
+		        <div class="form-group">
+		        	<select name="order" ng-model="category">
+		        		<option value="createdAt">By Date</option>
+		        		<option value="votes">By votes</option>
+		        	</select>
+		        </div>
 	      	</form>
 		</div>
 	</div>
@@ -57,15 +63,31 @@
 		</form>
 	</div>
 	<div class="contaniner-fluid col-md-offset-1 col-md-10">
-		<div class="jumbotron slide" ng-repeat="item in items | filter:search.string">
+		<div class="jumbotron slide" ng-repeat="item in items | filter:search.string | orderBy: category">
 			<div class="row">
 				<img ng-src='{{item.image}}' alt="placebear"  class="col-md-4 display-image" />
-				<h3 class="col-md-8"><b>{{item.title}}</b> <a href="#" ng-click="upVote(item)"><i class="fa fa-thumbs-o-up"></i></a> <a href="#" ng-click="downVote(item)"><i class="fa fa-thumbs-o-down"></i></a><p ng-class="{positive: item.votes > 0, negative: item.votes < 0, nothing: item.votes === 0}">{{item.votes}}</p></h3>
+				<h3 class="col-md-10"><b>{{item.title}}</b> <span href="#" ng-click="upVote(item)"><i class="fa fa-thumbs-o-up"></i></span> <span ng-click="downVote(item)"><i class="fa fa-thumbs-o-down"></i></span> <span ng-class="{positive: item.votes > 0, negative: item.votes < 0, nothing: item.votes === 0}">{{item.votes}}</span></h3>
 				<p class="col-md-8 text-left">{{item.description}}</p>
-				<p class="col-md-8 small"><time>{{item.createdAt | amCalendar}}</time> | postedBy: <b>{{item.author}} | <a ng-click="showComments(item)">comments: {{item.comments.length}}</a></b></p>
+				<p class="col-md-offset-2 col-md-8 small"><time>{{item.createdAt | amCalendar}}</time> | postedBy: <b>{{item.author}} | <a ng-click="showComments(item)"><ng-pluralize count="item.comments.length"
+		                when="{'0': 'no comments yet',
+		                		'1': 'comment',
+		                       'other': 'comments'}">
+					  </ng-pluralize>: {{item.comments.length}}</a> | <a ng-click="addAComment(item)">add a comment</a></b></p>
 			</div>
-			<div ng-hide="item.commentBool" class="row" ng-repeat="comment in item.comments">
-				<p class="col-md-offset-2">{{comment.comment}} By:<b>{{comment.author}}</b></p>
+			<div ng-repeat="comment in item.comments">
+				<div ng-hide="item.commentBool" class="row">
+					<p class="col-md-offset-2">{{comment.comment}} By:<b>{{comment.author}}</b></p>
+				</div>
+			</div>
+			<div class="col-md-offset-1" ng-hide="item.addCommentsBool">
+				<form name="myCommentsForm">
+					<label for="com">Comment</label>
+					<input placeholder="comment" type="text" name="com" class="form-control" ng-model="comment.comment">
+					<label for="authorC">Author:</label>
+					<input class="form-control" type="text" name="authorC" placeholder="author" ng-model="comment.author">
+					<br>
+					<button ng-click="addComment(comment, item)" type="btn btn-primary">Add Comment</button>
+				</form>
 			</div>
 		</div>
 	</div>
