@@ -3,16 +3,18 @@
 <head>
 	<title>Rekkit</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://bootswatch.com/simplex/bootstrap.min.css"></link>
+	<link rel="stylesheet" href="https://bootswatch.com/cerulean/bootstrap.min.css"></link>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="../public/stylesheets/main.css">
+	<link rel="stylesheet" type="text/css" href="main.css">
 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.js"></script>
 	<script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
 	<script src="https://cdn.jsdelivr.net/angular.moment/1.0.0-beta.3/angular-moment.min.js"></script>
-	<script src="../controllers/redditController.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/ui/jquery-ui-git.js"></script>
+	<script src="js/controller.js"></script>
+	<script type="text/javascript" src="../app.js"></script>
 </head>
 <body ng-controller="RekkitCtrl">
 	<div class="navbar navbar-default">
@@ -33,13 +35,14 @@
 		        	<select name="order" ng-model="category">
 		        		<option value="createdAt">By Date</option>
 		        		<option value="votes">By votes</option>
+		        		<option value="title">By title</option>
 		        	</select>
 		        </div>
 	      	</form>
 		</div>
 	</div>
 
-	<div class="container-fluid col-md-offset-1 col-md-10 slide" ng-hide="showForm">
+	<div class="container-fluid col-md-offset-1 col-md-10 slide" ng-show="showForm">
 		<form name="myForm">
 			<div class="form-group">
 				<label for="title">Title:</label>
@@ -62,11 +65,14 @@
 			</div>
 		</form>
 	</div>
+
 	<div class="contaniner-fluid col-md-offset-1 col-md-10">
-		<div class="jumbotron slide" ng-repeat="item in items | filter:search.string | orderBy: category">
+	<div>
+		<div class="slide" ng-repeat="item in items | filter:search.string | orderBy: category:sortReverse">
+		<div class="jumbotron slide">
 			<div class="row">
 				<img ng-src='{{item.image}}' alt="placebear"  class="col-md-4 display-image" />
-				<h3 class="col-md-10"><b>{{item.title}}</b> <span href="#" ng-click="upVote(item)"><i class="fa fa-thumbs-o-up"></i></span> <span ng-click="downVote(item)"><i class="fa fa-thumbs-o-down"></i></span> <span ng-class="{positive: item.votes > 0, negative: item.votes < 0, nothing: item.votes === 0}">{{item.votes}}</span></h3>
+				<h3 class="col-md-10"><b>{{item.title}}</b> <span href="#" ng-click="upVote(item)"><i class="fa fa-thumbs-o-up"></i></span> <span ng-click="downVote(item)"><i class="fa fa-thumbs-o-down"></i></span> <span ng-class="{ positive: item.votes > 0, negative: item.votes < 0, nothing: item.votes === 0}">{{item.votes}}</span></h3>
 				<p class="col-md-8 text-left">{{item.description}}</p>
 				<p class="col-md-offset-2 col-md-8 small"><time>{{item.createdAt | amCalendar}}</time> | postedBy: <b>{{item.author}} | <a ng-click="showComments(item)"><ng-pluralize count="item.comments.length"
 		                when="{'0': 'no comments yet',
@@ -74,12 +80,12 @@
 		                       'other': 'comments'}">
 					  </ng-pluralize>: {{item.comments.length}}</a> | <a ng-click="addAComment(item)">add a comment</a></b></p>
 			</div>
-			<div ng-repeat="comment in item.comments">
-				<div ng-hide="item.commentBool" class="row">
+			<div ng-repeat="comment in item.comments track by $index" class="slide">
+				<div ng-show="item.commentBool" class="row">
 					<p class="col-md-offset-2">{{comment.comment}} By:<b>{{comment.author}}</b></p>
 				</div>
 			</div>
-			<div class="col-md-offset-1" ng-hide="item.addCommentsBool">
+			<div class="col-md-offset-1 slide" ng-show="item.addCommentsBool">
 				<form name="myCommentsForm">
 					<label for="com">Comment</label>
 					<input placeholder="comment" type="text" name="com" class="form-control" ng-model="comment.comment">
@@ -90,11 +96,8 @@
 				</form>
 			</div>
 		</div>
+		</li>
 	</div>
-	<div class="navbar navbar-fixed-bottom navbar-default">
-		<div class="container-fluid">
-			<p class="navbar-text">Cairo</p>
-		</div>
 	</div>
 </body>
 </html>

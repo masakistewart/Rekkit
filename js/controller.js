@@ -9,12 +9,17 @@ app.controller('RekkitCtrl', function($scope){
         author: 'The Mother Goose',
         createdAt: Date.now(),
         votes: 1,
-        commentBool: true,
+        favorite: false,
+        commentBool: false,
         comments: [{
             comment: 'coolski',
             author: 'coolski'
-        }],
-        addCommentsBool: true
+        },{
+            comment: 'this sick beat tm taylor swift lol',
+            author: 'Viacom'
+        }
+        ],
+        addCommentsBool: false
     },
     {
         title: 'Cairo Is Uber Cool',
@@ -23,12 +28,13 @@ app.controller('RekkitCtrl', function($scope){
         author: 'The Mother Goose',
         createdAt: Date.now(),
         votes: 5,
-        commentBool: true,
+        favorite: false,
+        commentBool: false,
         comments: [{
             comment: 'coolski',
             author: 'coolski'
         }],
-        addCommentsBool: true
+        addCommentsBool: false
     },
     {
         title: 'Is I a Master',
@@ -37,12 +43,13 @@ app.controller('RekkitCtrl', function($scope){
         author: 'The Mother Goose',
         createdAt: Date.now(),
         votes: 30,
-        commentBool: true,
+        favorite: false,
+        commentBool: false,
         comments: [{
             comment: 'coolski',
             author: 'coolski'
         }],
-        addCommentsBool: true
+        addCommentsBool: false
     },
     {
         title: 'ZOMG',
@@ -51,12 +58,13 @@ app.controller('RekkitCtrl', function($scope){
         author: 'The Mother Goose',
         createdAt: Date.now(),
         votes: 0,
-        commentBool: true,
+        favorite: false,
+        commentBool: false,
         comments: [{
             comment: 'coolski',
             author: 'coolski'
         }],
-        addCommentsBool: true
+        addCommentsBool: false
     }];
 
     $scope.showComments = function(item) {
@@ -72,15 +80,18 @@ app.controller('RekkitCtrl', function($scope){
     }
 
     $scope.comment = {
-
     }
 
     $scope.item = {
         votes: 0,
-        createdAt: Date.now()
+        favorite: false,
+        createdAt: Date.now(),
+        comments: []
     };
 
-    $scope.showForm = true;
+    $scope.showForm = false;
+
+
     $scope.addAComment = function(item) {
         if (item.addCommentsBool === true) {
             item.addCommentsBool = false;
@@ -106,36 +117,39 @@ app.controller('RekkitCtrl', function($scope){
         if(myForm.$valid){
             item.votes = 0;
             item.createdAt = Date.now();
-            item.commentBool = true;
-            item.addCommentsBool = true;
+            item.commentBool = false;
+            item.addCommentsBool = false;
             $scope.items.push(item);
             $scope.item = {};
+            $scope.showForm = false;
         } else {
             console.log(myForm);
         }
     }
     $scope.addComment = function(comment, item){
         item.comments.push(comment);
-        comment = {};
+        $scope.comment = {};
+        item.addCommentsBool = false;
     }
+    $scope.sortReverse  = true;
 })
 
 app.animation('.slide', [function() {
     return {
-    // make note that other events (like addClass/removeClass)
-    // have different function input parameters
-    enter: function(element, doneFn) {
-    jQuery(element).slideDown(1000, doneFn)
-    // remember to call doneFn so that angular
-    // knows that the animation has concluded
-    },
+        // make note that other events (like addClass/removeClass)
+        // have different function input parameters
+        enter: function(element, doneFn) {
+        jQuery(element).slideDown(1000, doneFn)
+        // remember to call doneFn so that angular
+        // knows that the animation has concluded
+        },
 
-    move: function(element, doneFn) {
-    jQuery(element).fadeIn(1000, doneFn);
-    },
+        move: function(element, doneFn) {
+        jQuery(element).fadeIn(1000, doneFn);
+        },
 
-    leave: function(element, doneFn) {
-    jQuery(element).slideUp(1000, doneFn)
+        leave: function(element, doneFn) {
+        jQuery(element).slideUp(1000, doneFn)
+        }
     }
-}
 }]);
